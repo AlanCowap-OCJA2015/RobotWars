@@ -51,7 +51,6 @@ public class GameApp {
 	
 	public static void main(String[] args) {
 
-		
 		while (true) {
 			
 			switch(new GameApp().mainMenu()) {
@@ -102,11 +101,11 @@ public class GameApp {
 		
 		Contestant[] robotArmy = initialiseArmy();
 		for (Contestant c : robotArmy) {
-			c.setName(makeRobotName());
+			c.setName(c.makeRobotName());
 		}
 		Contestant[] humanArmy = initialiseArmy();
 		for (Contestant c : humanArmy) {
-			c.setName(makeHumanName());
+			c.setName(c.makeHumanName());
 		}
 		int result = doBattle(robotArmy, humanArmy, true);
 
@@ -132,11 +131,11 @@ public class GameApp {
 		
 		Contestant[] robotArmy = initialiseArmy();
 		for (Contestant c : robotArmy) {
-			c.setName(makeRobotName());
+			c.setName(c.makeRobotName());
 		}
 		Contestant[] humanArmy = initialiseArmy();
 		for (Contestant c : humanArmy) {
-			c.setName(makeHumanName());
+			c.setName(c.makeHumanName());
 		}
 		
 		while (true) {
@@ -259,36 +258,6 @@ public class GameApp {
 		}
 	}
 
-	public String makeRobotName() {
-		String[] sounds = {"ta", "be", "ca", "yo", "shi", "mu", "ra"
-		};
-		
-		int numSounds = 2 + new Random().nextInt(4);
-		String name = "";
-		for (;numSounds > 0; --numSounds) {
-			name += sounds[new Random().nextInt(sounds.length)];
-		}
-		return name+ "-"+new Random().nextInt(20) * 100;
-	}
-	
-	public String makeHumanName() {
-		String vowels = "aeiou";
-		String consonants = "bcdfghjklmnpqrstvwxyz";
-		
-		int numSounds = 1 + new Random().nextInt(4);
-		String name = "";
-		for (;numSounds > 0; --numSounds) {
-			int vpos = new Random().nextInt(vowels.length());
-			int cpos = new Random().nextInt(consonants.length());
-			if (new Random().nextInt(10) > 5) {
-				name += vowels.substring(vpos, vpos+1) + consonants.substring(cpos, cpos+1);
-			} else {
-				name += consonants.substring(cpos, cpos+1) + vowels.substring(vpos, vpos+1);
-			}
-		}
-		return name;
-	}
-	
 	public int getTotalPower(Contestant[] army) {
 		int totalPower = 0;
 		for (Contestant c : army) {
