@@ -122,7 +122,7 @@ public class GameApp {
 		}else{
 			System.out.println("Both armies have drawn this battle");
 		}
-			
+
 	}
 	
 	public void lastArmyStanding() {
