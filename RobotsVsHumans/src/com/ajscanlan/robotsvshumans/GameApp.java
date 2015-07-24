@@ -23,11 +23,12 @@ public class GameApp {
 	ArrayList<String> lastNames = new ArrayList<String>();
 	ArrayList<String> roboNames = new ArrayList<String>();
 
-	private final int LIMIT = 1000;
-	private final float DECAY = 0.05F;
+	private final int LIMIT = 500;
+	private final float DECAY = 0.055F;
 	private int totalHumanPower, totalRobotPower, winStreak;
 	private int sleep = 2500;
 	private String champion;
+	private boolean humanKillStreak = true, roboKillStreak = true; //to stop too many sound files playing
 
 	public static void main(String[] args) {
 
@@ -43,6 +44,7 @@ public class GameApp {
 
 		case 2:
 			gl.battleRoyale();
+			break;
 		}
 
 	}
@@ -62,33 +64,53 @@ public class GameApp {
 				tempWinStreak = 0;
 			}
 			
-			
+
+			System.out.println("Current Kill Streak: " + tempWinStreak);
 			System.out.println(robots.get(0) + " vs " + humans.get(0));
 			
-
+			//if human has more power than robot
 			if(humans.get(0).getPower() > robots.get(0).getPower()){
+				
+				tempWinStreak++;
 				robots.remove(0);
 				humans.get(0).setPower(humans.get(0).getPower() - (humans.get(0).getPower() * DECAY));
 				System.out.println("HUMAN WINNER");
 				prevChamp = tempChamp;
 				tempChamp = humans.get(0).getName();
-				calculateWinstreak(++tempWinStreak, humans.get(0).getName());
-				System.out.println("Current Kill Streak: " + tempWinStreak);
+				
+				if(tempWinStreak == 10 && humanKillStreak){
+					playSound("vehicularmanslaughter.wav");
+					humanKillStreak = false;
+				}
+				
+				calculateWinstreak(tempWinStreak, humans.get(0).getName());
+			
+			//if they have the same power
 			} else if(humans.get(0).getPower() == robots.get(0).getPower()){
 				robots.remove(0);
 				humans.remove(0);
 				System.out.println("DRAW");
+				playSound("mutualdestruction.wav");
 				System.out.println("Current Kill Streak: " + tempWinStreak);
+			
+			//if robot has more power than human
 			} else if(humans.get(0).getPower() < robots.get(0).getPower()) {
+				
+				tempWinStreak++;
 				humans.remove(0);
 				robots.get(0).setPower(robots.get(0).getPower() - (robots.get(0).getPower() * DECAY));
 				System.out.println("ROBOT WINNER");
 				prevChamp = tempChamp;
 				tempChamp = robots.get(0).getModel();
-				calculateWinstreak(++tempWinStreak, robots.get(0).getModel());
-				System.out.println("Current Kill Streak: " + tempWinStreak);
+				
+				if(tempWinStreak == 10 && roboKillStreak){
+					playSound("killingmachine.wav");
+					roboKillStreak = false;
+				}
+				
+				calculateWinstreak(tempWinStreak, robots.get(0).getModel());
 			}
-			
+
 			System.out.println("");
 		}
 
@@ -96,7 +118,27 @@ public class GameApp {
 		System.out.println("Robots: " + robots.size());
 		System.out.println("Champion: " + champion + "\nKill Streak: " + winStreak);
 		
+		System.out.println(Math.abs(humans.size() - robots.size()));
 		
+		if(Math.abs(humans.size() - robots.size()) == 1){
+			//if theres only one left standing
+			playSound("lastsecondsave.wav");
+		} else if(Math.abs(humans.size() - robots.size()) < 10){
+			//if theres less than 10 remaining
+			playSound("bloodbath.wav");
+		} else if(Math.abs(humans.size() - robots.size()) > 50){
+			//if theres more than 50 remaining
+			playSound("massacre.wav");
+		}
+		
+		if(humans.size() > robots.size()){
+			//if humans win
+			playSound("termination.wav");
+		} else if (humans.size() < robots.size()){
+			//if robots win
+			playSound("extermination.wav");
+		}
+
 	}
 
 	private void calculateWinstreak(int tempWinStreak, String name) {
@@ -106,47 +148,51 @@ public class GameApp {
 		}
 
 		switch(tempWinStreak){
-		case 2:
-			System.out.println("Double Kill");
-			playSound("doublekill.wav");
-			break;
-		case 3:
-			System.out.println("Multi Kill");
-			playSound("multikill.wav");
-			break;
-		case 4:
-			System.out.println("Ultra Kill");
-			playSound("ultrakill.wav");
-			break;
-		case 5:
+		//		case 2:
+		//			System.out.println("Double Kill");
+		//			playSound("doublekill.wav");
+		//			break;
+		//		case 3:
+		//			System.out.println("Multi Kill");
+		//			playSound("multikill.wav");
+		//			break;
+		//		case 4:
+		//			System.out.println("Ultra Kill");
+		//			playSound("ultrakill.wav");
+		//			break;
+		case 11:
 			System.out.println("R-R-R-R-RAMPAGE");
 			playSound("rampage.wav");
 			break;
-		case 10:
-			System.out.println("HOLY SHIT");
+		case 12:
 			System.out.println("GODLIKE");
 			playSound("godlike.wav");
+			break;
+		case 13:
+			System.out.println("HOLY SHIT");
+			playSound("holyshit.wav");
+			break;
 		}
 	}
 
 	private void playSound(String string) {
 		try {
-		    File yourFile = new File(string);
-		    AudioInputStream stream;
-		    AudioFormat format;
-		    DataLine.Info info;
-		    Clip clip;
+			File yourFile = new File(string);
+			AudioInputStream stream;
+			AudioFormat format;
+			DataLine.Info info;
+			Clip clip;
 
-		    stream = AudioSystem.getAudioInputStream(yourFile);
-		    format = stream.getFormat();
-		    info = new DataLine.Info(Clip.class, format);
-		    clip = (Clip) AudioSystem.getLine(info);
-		    clip.open(stream);
-		    clip.start();
-		    Thread.sleep(sleep);
+			stream = AudioSystem.getAudioInputStream(yourFile);
+			format = stream.getFormat();
+			info = new DataLine.Info(Clip.class, format);
+			clip = (Clip) AudioSystem.getLine(info);
+			clip.open(stream);
+			clip.start();
+			Thread.sleep(sleep);
 		}
 		catch (Exception e) {
-		    //whatevers
+			//whatevers
 		}
 	}
 
