@@ -107,34 +107,102 @@ public class Contestant implements Comparable<Contestant> {
 	
 	/**
 	 * Generate a human sounding name
+	 * Randomly select from an array of syllables. Each syllable will be accompanied
+	 * by a list of letters that go well with it on the left and right hand sides
 	 * @return
 	 */
 	public String makeHumanName() {
-		String vowels = "aeiou";
-		String consonants = "ebcdfghjklmnprstvwyxqz";			// Yes, there is an 'e' in there
-		Random rand = new Random();
-		String name = "";
-		int numSounds = 3 + rand.nextInt(8);
+		final String vowels = "aeiou";
+		final String cons = "bcdfghjklmnpqrstvwxyz";
 		
-		for (;numSounds > 0; --numSounds) {
-			int vpos = rand.nextInt(vowels.length());
-			int cpos = rand.nextInt(consonants.length());
-			// Bias the consonant selection to the lower end of the string
-			cpos += rand.nextInt(consonants.length());
-			cpos = consonants.length() - 1 - (cpos/2);
+		String[] syllables = {
+				cons,	"al",	vowels,
+				cons,	"an",	vowels,
+				cons,	"ar",	vowels,
+				cons,	"as",	vowels,
+				cons,	"at",	vowels,
+				cons,	"ea",	cons,
+				cons,	"ed",	vowels,
+				cons,	"en",	vowels,
+				cons,	"er",	vowels,
+				cons,	"es",	vowels,
+				vowels,	"ha",	cons,
+				vowels,	"he",	cons,
+				vowels,	"hi",	cons,
+				cons,	"in",	vowels,
+				cons,	"is",	vowels,
+				cons,	"it",	vowels,
+				vowels,	"le",	cons,
+				vowels,	"ke",	cons,
+				vowels,	"me",	cons,
+				vowels,	"nd",	vowels,
+				vowels,	"ne",	cons,
+				vowels,	"ng",	vowels,
+				vowels,	"nt",	vowels,
+				cons,	"on",	vowels,
+				cons,	"or",	vowels,
+				cons,	"ou",	cons,
+				vowels,	"re",	cons,
+				vowels,	"se",	cons,
+				vowels,	"st",	vowels,
+				vowels,	"te",	cons,
+				vowels,	"th",	vowels,
+				vowels,	"ti",	cons,
+				vowels,	"to",	cons,
+				vowels,	"ve",	cons,
+				vowels,	"wa",	cons,
+				vowels,	"he",	cons,
+				cons,	"and",	vowels,
+				vowels,	"con",	vowels,
+				vowels,	"jam",	vowels,
+				vowels,	"sam",	vowels,
+				vowels,	"mar",	cons,
+				vowels,	"pet",	vowels,
+				vowels,	"jos",	vowels,
+				vowels,	"jen",	vowels,
+				cons,	"art",	vowels,
+				vowels,	"gre",	cons + vowels,
+				vowels,	"cr",	vowels,
+				vowels,	"mi",	cons,
+				vowels,	"rob",	vowels,
+				cons,	"ark",	vowels,
+
+				
+		};
+		Random rand = new Random();
+		
+		int lastSyl = -1;
+		int syl = rand.nextInt(syllables.length / 3);
+		String preMatch = syllables[syl * 3];
+		String sound = syllables[syl * 3 + 1];
+		String postMatch = syllables[syl * 3 + 2];
+		String lastSound = sound;
+		String name = sound;
+		
+		int numSyls = 2 + rand.nextInt(2);
+		
+		for (int i = 0; i < numSyls; ++i) {
 			
-			if (rand.nextInt(10) > 5) {
-				name += vowels.substring(vpos, vpos+1) + consonants.substring(cpos, cpos+1);
-			} else {
-				name += consonants.substring(cpos, cpos+1) + vowels.substring(vpos, vpos+1);
+			while (true) {
+				
+				// pick another random syllable
+				postMatch = syllables[syl * 3 + 2];
+				syl = rand.nextInt(syllables.length / 3);
+//				System.out.printf("Chose syllable #%d\n", syl);
+				preMatch = syllables[syl * 3];
+				sound = syllables[syl * 3 + 1];
+//				System.out.printf("Matching new sound '%s' with '%s' using pre-match of %s\n", sound, lastSound, preMatch);
+				if (postMatch.indexOf(sound.substring(0, 1)) >= 0) {
+//					System.out.println("Match made");
+					break;
+				}
 			}
-			if (rand.nextInt(10) > 7) {
-				name += vowels.substring(vpos, vpos+1);
-			}
-			if (rand.nextInt(10) > 8) {
-				name += " ";
-			}
+			name += sound;
+			lastSound = sound;
+			
 		}
+		
+		
 		return name;
 	}
 	
