@@ -3,11 +3,15 @@ package com.conorbrennan.robotsVhumans;
 
 
 public class Human extends Lifeform {
-	int humanID;
-	Human(String name ,int humanID, int power){
-		this.uniqueID = name;
-		this.humanID = humanID;
-		this.power= power;
+	
+	Human(String name , int power){
+		this.name = name;
+		this.power = power;
+	}
+
+	@Override
+	public String toString() {
+		return "Human "+name+" with a power of"+power;
 	}
 	
 	

@@ -1,8 +1,8 @@
 package com.conorbrennan.robotsVhumans;
 
 public class Lifeform {
-	public int power;
-	
+	protected int power;
+	protected String name ;
 	public int getPower() {
 		return power;
 	}
@@ -13,6 +13,14 @@ public class Lifeform {
 
 	public String getUniqueID() {
 		return uniqueID;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setUniqueID(String uniqueID) {

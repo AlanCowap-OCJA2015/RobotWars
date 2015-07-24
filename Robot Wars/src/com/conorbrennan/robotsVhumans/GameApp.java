@@ -7,13 +7,14 @@ public class GameApp {
 	Random rand = new Random();
 	Human[] humanArmy = new Human[500];
 	Robot[] robotArmy = new Robot[500];
+
 	int robotAType = 0;
 	int robotBType = 0;
 	int humanPower ;
 	int robotPower ;
-
+	String humanName = "" ;
 	String robotType ;
-	int humanID = 0;
+	String robotName ="";
 
 	public static void main(String[] args) {
 		GameApp g = new GameApp();
@@ -21,10 +22,28 @@ public class GameApp {
 		g.runProgram();
 
 	}
+	public String createRobotName(){
+		String[] robots = {"Robo Cop","The Terminator","T1000","Killatron 5000","bender the bending appliance",
+				"Optimus Prime","R2D2","Kit (the car from night rider)","Mechagodzilla","The Iron Giant","C3PO",
+				"Johnny 5","Wall-E","Robby the robot","Astro Boy","Mega Man","HAL 9000","Data","Megatron","T-800"};
+		int robotNameChoice = rand.nextInt(20);
+		robotName = robots[robotNameChoice];
+		return robotName;
+	}
+	public String createName(){
+		String[] sounds = {"ha","wa","na","uck","ch","ert","ing"};
+		for(int i =0;i<2;++i){
+			int nameChoice = rand.nextInt(7);
+			humanName += sounds[nameChoice];
+
+		}
+		return humanName;
+	}
 	public void runProgram(){
 		boolean quit = false;
 		do{
 
+			@SuppressWarnings("resource")
 			Scanner scan = new Scanner(System.in);
 			String oldChoice ;
 			int choice;
@@ -54,7 +73,9 @@ public class GameApp {
 		for(int i = 0; i<robotArmy.length;i++){
 			humanPower = (rand.nextInt(101));
 			robotPower = (rand.nextInt(101));
-
+			createName();
+			createRobotName();
+			//			System.out.println(" "+humanName+" ");
 			int robotChoice = rand.nextInt(2);
 			if(robotChoice==1){
 				robotType="Type B";
@@ -64,16 +85,17 @@ public class GameApp {
 				robotAType++;
 			}
 			//			System.out.println(humanPower+" "+robotPower);
-			Human c = new Human("john connor",humanID , humanPower);
-			Robot r = new Robot(robotType,robotPower);
+			Human c = new Human(humanName, humanPower);
+			Robot r = new Robot(robotName,robotType,robotPower);
 			robotArmy[i]=r;
 			humanArmy[i]=c;
-			humanID++;
+			humanName="";
+			robotName="";
 		}
 	}
 	private void runLastManRobotGame() {
 		// TODO Auto-generated method stub
-		populateArray();
+		//populateArray();
 		int humanWin = 0;
 		int robotWin = 0;
 		Lifeform champion = null ;
@@ -81,7 +103,7 @@ public class GameApp {
 		int humanCount = 0;
 		int robotCount = 0;
 		for(int i =0  ;humanWin<robotArmy.length&&robotWin<robotArmy.length;i++ ){
-//			System.out.println(humanArmy[humanCount].power+" "+robotArmy[robotCount].power+" "+humanCount);
+			//			System.out.println(humanArmy[humanCount].power+" "+robotArmy[robotCount].power+" "+humanCount);
 			if(humanArmy[humanCount].power>robotArmy[robotCount].power){
 				champion = humanArmy[humanCount];
 				humanArmy[humanCount].power = (humanArmy[humanCount].power * 90)/100 ; 
@@ -132,7 +154,7 @@ public class GameApp {
 			}
 
 
-			humanID++;
+			
 			//System.out.print(robotArmy[i].modelName+" "+robotArmy[i].power);
 			//System.out.print(humanArmy[i].name+humanArmy[i].humanID+" "+humanArmy[i].power);
 			if(humanArmy[i].getPower()>robotArmy[i].getPower()){
